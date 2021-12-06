@@ -33,5 +33,25 @@ def part1():
     return increased
 
 
+@solver
+def part2():
+    lines = input.splitlines()
+    lines = [int(i) for i in lines]
+    prev = sum(lines[0:3])
+    print(lines[0:3])
+    print(sum(lines[0:3]))
+    increased = 0
+    for offset, _ in enumerate(lines):
+        # print(offset)
+        if (offset +3 > len(lines)):
+            break
+        current = sum(lines[offset: offset + 3])
+        if current > prev:
+            increased += 1
+        prev = current
+    return increased
+
+
 if __name__ == '__main__':
     part1()
+    part2()
