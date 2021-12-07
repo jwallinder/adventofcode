@@ -1,7 +1,7 @@
 from input import part1_input as input
 from time import perf_counter_ns
 
-NS_TO_MICRO = 1000
+
 
 
 def solver(fn):

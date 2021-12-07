@@ -1,0 +1,45 @@
+from common.solver import solver
+
+
+@solver
+def part1(test_input=False):
+
+    file = "test_input.txt" if test_input else "part1.txt"
+
+    with open(file) as f:
+        lines = f.read().splitlines()
+        # print(lines)
+
+    vertical = 0
+    horizontal = 0
+
+    for line in lines:
+        vert, horiz = process_line(line)
+        vertical += vert
+        horizontal += horiz
+
+    return vertical * horizontal
+
+
+def process_line(line):
+    direction, movement = lines = line.split(" ")
+    movement = int(movement)
+    # print(f"{direction=}")
+    # print(f"{movement=}")
+
+    if direction == "forward":
+        return 0, movement
+    if direction == "down":
+        return movement, 0
+    if direction == "up":
+        return -movement, 0
+
+
+@solver
+def part2():
+    pass
+
+
+if __name__ == '__main__':
+    part1()
+    part2()
