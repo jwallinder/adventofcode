@@ -36,5 +36,5 @@ def part2(test_input=False):
 
 
 if __name__ == '__main__':
-    part1(False)
-    part2()
+    assert part1(True) in [1307354, 198]
+    assert part2(False) in [230]

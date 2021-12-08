@@ -11,5 +11,6 @@ def solver(fn):
         print(f"{fn.__name__}:")
         print(f"Answer is: {res}")
         print(f"Took: {elapsed_time / NS_TO_MICRO} µs\n")
+        return res
 
     return wrap
