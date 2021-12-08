@@ -1,8 +1,9 @@
-from common.solver import solver
-import pprint
 
-@solver
-def part1(test_input=False):
+
+from common.solver import solver
+
+
+def load_boards_from_input(test_input=False):
     file = "test_input.txt" if test_input else "part1.txt"
     with open(file) as f:
         lines = f.read().splitlines()
@@ -30,6 +31,14 @@ def part1(test_input=False):
     for b in boards:
         bingoBoards.append(Board(b))
 
+    return bingoBoards, drawn_numbers
+
+
+@solver
+def part1(test_input=False):
+    bingoBoards, drawn_numbers = load_boards_from_input(test_input)
+
+
     for num in drawn_numbers:
         for b_index, bingboard in enumerate(bingoBoards):
             bingboard.mark_number(num)
@@ -49,6 +58,7 @@ class Board:
         self.numbers = sorted([x for y in initial_board for x in y])
         self.bingo_rows = self.create_bingo_rows(self.board)
         print(f"{self.bingo_rows=}")
+        self.isBingo = False
 
 
     def mark_number(self, num):
@@ -61,6 +71,7 @@ class Board:
     def hasBingo(self):
         for i, row in enumerate(self.bingo_rows):
             if len(row) == 0:
+                self.isBingo = True
                 print(f"bingo on row {i}")
                 return True
 
@@ -68,15 +79,9 @@ class Board:
     def create_bingo_rows(self, board):
         rows = []
         cols = [[]]*len(board[0])
-        diag1 = []
-        diag2 = []
+
         for row_index, row in enumerate(board):
             for col_index, num in enumerate(row):
-                if row_index == col_index:
-                    diag1.append(num)
-                if (4-row_index) == col_index:
-                    diag2.append(num)
-
                 if col_index == 0:
                     rows.append(row)
                 if row_index == 0:
@@ -84,21 +89,28 @@ class Board:
                 else:
                     cols[col_index].append(num)
                 print(f"{row_index}:{col_index}::{num}")
-        print(f"{rows=}")
-        print(f"{cols=}")
-        print(f"{diag1=}")
-        print(f"{diag2=}")
 
-        toreturn = rows + cols
-        # toreturn.append(diag1)
-        # toreturn.append(diag2)
-        return toreturn
+        return rows + cols
 
 @solver
 def part2(test_input=False):
-    pass
+    bingoBoards, drawn_numbers = load_boards_from_input(test_input)
+
+
+    for num in drawn_numbers:
+        for b_index, bingboard in enumerate(bingoBoards):
+            bingboard.mark_number(num)
+            if bingboard.hasBingo():
+                bingoBoards = [b for b in bingoBoards if not b.isBingo]
+                if len(bingoBoards) == 0:
+                    print(f"BINGO for {b_index} when drawing {num}")
+                    print(bingboard.numbers)
+                    print(sum(bingboard.numbers))
+                    return sum(bingboard.numbers) * num
+
+
 
 
 if __name__ == '__main__':
     assert part1(False) in [4512, 69579]
-    # assert part2(False) in [230, 482500]
+    assert part2(False) in [1924, 14877]
