@@ -7,21 +7,50 @@ def part1(test_input=False):
     input= list(load_from_input(test_input))
 
 
-    lanternfish = input
-    for day in range(1,81):
-
-        sum_new_fishes = len(list(filter(lambda x: x == 0, lanternfish)))
-
-        lanternfish = [fish-1 if fish >0 else 6 for fish in lanternfish]
-        lanternfish.extend([8]*sum_new_fishes)
-        #print(f"{day=}: {lanternfish}")
-
-    return len(lanternfish)
+    return lemon(input, 80)
 
 @solver.solver
 def part2(test_input=False):
-    pass
+    input = list(load_from_input(test_input))
 
+    return lemon(input, 256)
+
+
+def lemon(input, days):
+    lanternfish = input
+
+    fish_dict = defaultdict(lambda : 0)
+    fish_dict[0] = 0
+    fish_dict[1] = 0
+    fish_dict[2] = 0
+    fish_dict[3] = 0
+    fish_dict[4] = 0
+    fish_dict[5] = 0
+    fish_dict[6] = 0
+    fish_dict[7] = 0
+    fish_dict[8] = 0
+
+    for f in input:
+        fish_dict[f] += 1
+
+    #print(f"{fish_dict}")
+
+    for day in range(1,days+1):
+        new_fishes = fish_dict.get(0,0)
+        fish_dict = {key-1: value for key, value in fish_dict.items()}
+        del fish_dict[-1]
+
+        if fish_dict.get(6) or new_fishes:
+            fish_dict[6] = fish_dict.get(6,0) +new_fishes
+
+        fish_dict[8] = new_fishes
+        # print(f"{day=}: {fish_dict=}")
+
+        #print(f"{day=}: {lanternfish}")
+    fish_vals = fish_dict.values()
+    #print(f"{fish_vals=}")
+    # print(f"{sum(fish_vals)=}")
+    return sum(fish_vals)
 
 
 def load_from_input(test_input=False):
@@ -34,5 +63,7 @@ def load_from_input(test_input=False):
 
 
 if __name__ == '__main__':
-    assert part1(False) in [5934, 365131]
-    assert part2(False) in ["WRONG", "WRONG"]
+    assert part1(True) == 5934
+    assert part1(False) == 365131
+    assert part2(True) == 26984457539
+    assert part2(False) == "WRONG"
